@@ -1,0 +1,92 @@
+<html>
+<head>
+<meta charset="windows-1251">
+<title>Да работай уже!</title>
+</head>
+<body>
+<script type="text/javascript" src="jquery.min.js">
+</script>
+<style type="text/css">
+body {
+	font-family: Tahoma;
+	font-size: 10pt;
+}
+
+span#rating_star {
+	width: 16px;
+	height: 18px;
+	position: relative;
+	left: 16px;
+	display: block;
+	cursor: pointer;
+	background: url('off.gif') no-repeat;
+}
+
+span#rating_star:hover {
+	background: url('on.gif') no-repeat;
+}
+
+div#rating_selector > span:only-child {
+	left: 0px;
+}
+
+/* For rating results */
+div#rating_results > span.rating {
+	width: 16px;
+	height: 18px;
+	display: inline-block;
+}
+
+div#rating_results > span.glow {
+	background: url('on.gif') no-repeat;
+}
+
+div#rating_results > span.noglow {
+	background: url('off.gif') no-repeat;
+}
+
+</style>
+<script>
+$(document).ready(function(){
+	$('span#rating_star').click(function (e) {
+		e.stopPropagation();
+		var rate_value = $(e.target).attr('value');
+		$.ajax({
+			url: 'callback.php',
+			type: 'post',
+			data: {rate: rate_value},
+			beforeSend: function () {
+				$('div#rating_selector').text('Please wait, while we are loading HTTP AJAX POST request using jQuery.ajax() method...');
+			},
+			success: function (result) {
+				$('div#rating_selector').text('Results are loaded, please wait while we prepare them for output...').fadeOut(1500, function () {
+					$('div#rating_selector').html(result).fadeIn();
+				});
+			}
+		});
+	});
+});	
+</script>
+</body>
+<div id="rating_selector">
+	<span id="rating_star" value="1">
+	<span id="rating_star" value="2">
+	<span id="rating_star" value="3">
+	<span id="rating_star" value="4">
+	<span id="rating_star" value="5">
+	</span></span></span></span></span>
+</div>
+
+<div id="rating_results">
+	<span class="rating glow"></span><!-- Dirty hack against spaces, while using inline-block
+	--><span class="rating glow"></span><!--
+	--><span class="rating glow"></span><!--
+	--><span class="rating glow"></span><!--
+	--><span class="rating noglow"></span>
+</div>
+
+<p>
+	<div>Stars shoud not be here</div>
+	<label>Test</label></p>
+
+</html>
